@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\UrlShortenerContract;
 use App\Models\Link;
 use Illuminate\Http\Request;
+use App\Http\Requests\UrlShortenerRequest;
 
 class LinkController extends Controller
 {
@@ -22,7 +23,7 @@ class LinkController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -41,13 +42,10 @@ class LinkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UrlShortenerRequest $request)
     {
-        $request->validate([
-            'url' => 'required|url'
-        ]);
-        
-        return $this->urlShortener->makeShortUrl($request->url);
+        $validated = $request->validated();
+        return $this->urlShortener->makeShortUrl($validated['url']);
     }
 
     /**

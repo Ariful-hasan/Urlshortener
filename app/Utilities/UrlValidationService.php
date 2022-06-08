@@ -27,16 +27,15 @@ class UrlValidationService {
      * @param  mixed $url
      * @return bool
      */
-    public static function isSafeUrl(string $url): bool
+    public function isSafeUrl(string $url): bool
     {
         try {
-            $cls = new self();
-            $apiUrl = $cls->apiUrl . $cls->apiKey;
+            $apiUrl = $this->apiUrl . $this->apiKey;
             
             $requestBody = [
                 "client" => [
-                  "clientId"        => $cls->clientId,
-                  "clientVersion"   => $cls->clientVersion
+                  "clientId"        => $this->clientId,
+                  "clientVersion"   => $this->clientVersion
                 ],
                 "threatInfo" => [
                   "threatTypes"     => ["MALWARE", "SOCIAL_ENGINEERING"],

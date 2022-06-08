@@ -8,6 +8,10 @@ use App\Utilities\UrlValidationService;
 
 class UrlShortenerService implements UrlShortenerContract {
     
+    public function __construct(protected UrlValidationService $urlValidationService)
+    {
+        
+    }
     /**
      * makeShortUrl
      *
@@ -27,7 +31,7 @@ class UrlShortenerService implements UrlShortenerContract {
                 ], 200);
             }
 
-            if (!UrlValidationService::isSafeUrl($url)){
+            if (!$this->urlValidationService->isSafeUrl($url)){
                 return response()->json([
                     config('constants.STATUS_CODE') => "503",
                     config('constants.MESSAGE') => config('status.status_code.503'),
