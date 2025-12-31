@@ -5,13 +5,17 @@ namespace App\Utilities;
 use App\Contracts\UrlShortenerContract;
 use App\Models\Link;
 use App\Utilities\UrlValidationService;
+use Faker\Provider\Base;
 
 class UrlShortenerService implements UrlShortenerContract {
-    
-    public function __construct(protected UrlValidationService $urlValidationService)
-    {
-        
-    }
+
+    public function __construct(
+        protected UrlValidationService $urlValidationService,
+        protected SnowflakeGenerator $snowflakeGenerator,
+        protected Base62Service $base62Service
+    )
+    {}
+
     /**
      * makeShortUrl
      *
@@ -19,9 +23,8 @@ class UrlShortenerService implements UrlShortenerContract {
      * @return void
      */
     public function makeShortUrl(string $url)
-    {  
+    {
         try {
-
             $link = Link::where('url', $url)->first();
             if ($link) {
                 return response()->json([
@@ -58,7 +61,7 @@ class UrlShortenerService implements UrlShortenerContract {
             ], 500);
         }
     }
-    
+
     /**
      * makeHash
      *
@@ -66,9 +69,10 @@ class UrlShortenerService implements UrlShortenerContract {
      */
     public function makeHash(): string
     {
-        return bin2hex(random_bytes(3));
+        //return bin2hex(random_bytes(3));
+        $id = $this->snowflakeGenerator->nextId();
+
+        return $this->base62Service->encode($id);
     }
-
-
 
 }
