@@ -3,6 +3,11 @@
 use Illuminate\Support\Facades\Facade;
 
 return [
+    'machine_id' => (function ()  {
+        preg_match('/-(\d+)$/', env('POD_NAME', 'url-shortener-0'), $matches);
+
+        return isset($matches[1]) ? (int)$matches[1] : 0;
+    })(),
 
     /*
     |--------------------------------------------------------------------------

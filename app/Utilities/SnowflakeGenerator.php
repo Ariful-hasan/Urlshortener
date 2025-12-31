@@ -49,9 +49,11 @@ class SnowflakeGenerator
 
     protected function tilNextMillis($lastTimestamp) {
         $timestamp = $this->timeGen();
+
         while ($timestamp <= $lastTimestamp) {
             $timestamp = $this->timeGen();
         }
+
         return $timestamp;
     }
 }

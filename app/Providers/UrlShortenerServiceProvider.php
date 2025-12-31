@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\UrlShortenerContract;
+use App\Utilities\SnowflakeGenerator;
 use App\Utilities\UrlShortenerService;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +15,13 @@ class UrlShortenerServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        //
+        // Bind the SnowflakeGenerator as a Singleton
+        $this->app->singleton(SnowflakeGenerator::class, function ($app) {
+            // Grab the machine_id we calculated in the config
+            $machineId = config('app.machine_id');
+
+            return new SnowflakeGenerator($machineId);
+        });
     }
 
     /**
