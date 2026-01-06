@@ -8,7 +8,7 @@ RUN composer install --optimize-autoloader --no-interaction --no-scripts
 
 
 # STAGE 2: Final Production Image
-FROM php:8.3-fpm-alpine
+FROM php:8.4-fpm-alpine
 WORKDIR /var/www/html
 
 # 1. Define arguments for local user (defaults to empty for prod)

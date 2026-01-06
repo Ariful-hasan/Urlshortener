@@ -1,15 +1,16 @@
 version: '3.9'
 
 services:
+  #TODO web server service
   app:
     build:
       context: .
-      dockerfile: Docker/Dockerfile
+      dockerfile: docker/Dockerfile
       args:
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
     image: urlshortener_app
-    container_name: urlshortener_app
+    container_name: app
     ports:
       - "8000:8000"
     volumes:
@@ -19,10 +20,18 @@ services:
         condition: service_healthy
     networks:
       - app-network
+    environment:
+      - APP_ENV
+      - DB_CONNECTION
+      - DB_HOST
+      - DB_PORT
+      - DB_DATABASE
+      - DB_USERNAME
+      - DB_PASSWORD
 
   db:
     image: mysql:8.0
-    container_name: urlshortener_db
+    container_name: db
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
@@ -43,4 +52,4 @@ networks:
         driver: bridge
 
 volumes:
-    db_data
+    db_data:
