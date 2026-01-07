@@ -2,6 +2,24 @@ version: '3.9'
 
 services:
   #TODO web server service
+  web:
+    image: nginx:alpine
+    container_name: web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - PHP_FPM_NGINX_MAX_REQUESTS
+      - PHP_FPM_PORT
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - app-network
+
   app:
     build:
       context: .
@@ -11,8 +29,7 @@ services:
         - GROUP_ID=${GROUP_ID:-1000}
     image: urlshortener_app
     container_name: app
-    ports:
-      - "8000:8000"
+    restart: unless-stopped
     volumes:
       - ./:/var/www/html
     depends_on:
@@ -28,6 +45,13 @@ services:
       - DB_DATABASE
       - DB_USERNAME
       - DB_PASSWORD
+      - PHP_FPM_NGINX_MAX_REQUESTS
+      - PHP_FPM_PORT
+    healthcheck:
+      test: ["CMD", "cgi-fcgi", "-bind", "-connect", "127.0.0.1:${PHP_FPM_PORT}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   db:
     image: mysql:8.0
@@ -35,6 +59,7 @@ services:
     environment:
       - MYSQL_DATABASE=${DB_DATABASE}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - DB_PORT
     ports:
      - "${DB_PORT:-3306}:3306"
     volumes:

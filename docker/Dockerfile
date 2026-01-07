@@ -29,6 +29,8 @@ RUN if [ ! -z "$USER_ID" ]; then \
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions pdo_mysql bcmath gd zip intl mbstring redis
 
+COPY docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
+
 # 6. Copy Code with Permissions (The "One-Shot" method)
 # This handles the owner for EVERYTHING copied in
 COPY --chown=www-data:www-data . .
@@ -38,6 +40,7 @@ COPY --chown=www-data:www-data --from=vendor /app/vendor ./vendor
 COPY docker/entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
+EXPOSE 9000
 USER www-data
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
