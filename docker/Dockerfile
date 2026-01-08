@@ -29,6 +29,8 @@ RUN if [ ! -z "$USER_ID" ]; then \
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions pdo_mysql bcmath gd zip intl mbstring redis
 
+# 5. Copy PHP config
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/php.ini
 COPY docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # 6. Copy Code with Permissions (The "One-Shot" method)
