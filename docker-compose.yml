@@ -1,7 +1,6 @@
 version: '3.9'
 
 services:
-  #TODO web server service
   web:
     image: nginx:alpine
     container_name: web
@@ -72,9 +71,27 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
     app-network:
         driver: bridge
 
 volumes:
     db_data:
+    redis_data:
