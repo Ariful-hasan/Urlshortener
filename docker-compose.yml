@@ -34,6 +34,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - app-network
     environment:
@@ -46,6 +48,9 @@ services:
       - DB_PASSWORD
       - PHP_FPM_NGINX_MAX_REQUESTS
       - PHP_FPM_PORT
+      - REDIS_PASSWORD
+      - REDIS_PORT
+      - REDIS_HOST
     healthcheck:
       test: ["CMD", "cgi-fcgi", "-bind", "-connect", "127.0.0.1:${PHP_FPM_PORT}"]
       interval: 10s
