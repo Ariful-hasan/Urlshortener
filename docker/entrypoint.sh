@@ -24,7 +24,26 @@ if [ "$APP_ENV" != "testing" ]; then
     done
     echo "Database is ready!"
 
-    # TODO redis is ready check can be added here.
+    
+    # 3. Wait for Redis (Recommended since you use phpredis)
+    echo "Waiting for Redis connection..."
+    until php -r "
+        \$redis = new Redis();
+        try {
+            \$redis->connect(getenv('REDIS_HOST'), (int)getenv('REDIS_PORT'));
+            if (getenv('REDIS_PASSWORD')) {
+                \$redis->auth(getenv('REDIS_PASSWORD'));
+            }
+            \$redis->ping();
+            exit(0);
+        } catch (Exception \$e) {
+            exit(1);
+        }
+    "; do
+    echo "Redis is unavailable - sleeping..."
+    sleep 2
+    done
+    echo "Redis is ready!"
 fi
 
 echo "Running migrations..."
