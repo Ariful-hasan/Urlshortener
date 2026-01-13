@@ -8,26 +8,20 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('links', function (Blueprint $table) {
+        Schema::create('code_pool', function (Blueprint $table) {
             $table->id();
-            $table->string('url');
-            $table->string('hash')->unique();
-            $table->timestamps();
+            $table->string('code', 10)->unique();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('links');
+        Schema::dropIfExists('code_pool');
     }
 };
