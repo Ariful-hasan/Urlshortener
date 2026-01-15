@@ -15,7 +15,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('app:generate-short-code')
+        ->everyFiveMinutes()
+        ->withoutOverlapping(10);
     }
 
     /**
