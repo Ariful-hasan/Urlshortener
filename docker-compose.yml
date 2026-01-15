@@ -113,6 +113,30 @@ services:
     networks:
     - app-network
 
+  scheduler:
+    image: app:latest # Reuses the image built by the app service
+    container_name: scheduler
+    build:
+        context: .
+        dockerfile: docker/Dockerfile
+    restart: unless-stopped
+    volumes:
+    - ./:/var/www/html
+    command: >
+      sh -c "while true; do
+        php artisan schedule:run --no-interaction &
+        sleep ${SCHEDULER_PING_INTERVAL};
+      done"
+    depends_on:
+        app:
+            condition: service_healthy
+        db:
+            condition: service_healthy
+        redis:
+            condition: service_healthy
+    networks:
+    - app-network
+
 networks:
     app-network:
         driver: bridge
