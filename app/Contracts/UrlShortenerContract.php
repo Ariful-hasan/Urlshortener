@@ -2,20 +2,22 @@
 
 namespace App\Contracts;
 
+use App\Models\ShortUrl;
+
 interface UrlShortenerContract {
-    
+
     /**
      * makeShortUrl
      *
      * @param  mixed $url
-     * @return void
+     * @return ShortUrl
      */
-    public function makeShortUrl(string $url);
-    
+    public function makeShortUrl(string $url): ShortUrl;
+
     /**
      * makeHash
      *
      * @return string
      */
-    public function makeHash (): string;
+    public function makeHash (string $url): string;
 }

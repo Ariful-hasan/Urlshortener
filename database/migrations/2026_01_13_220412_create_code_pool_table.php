@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('code_pool', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 10)->unique();
+            $table->string('code', 10)
+            ->charset('utf8mb4')
+            ->collation('utf8mb4_bin')
+            ->unique();
         });
     }
 
