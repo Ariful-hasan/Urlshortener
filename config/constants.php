@@ -11,4 +11,6 @@ return [
     'SHORT_BASE_URL' => env('SHORT_BASE_URL'),
     'CODE_POOL_TARGET_SIZE' => env('CODE_POOL_TARGET_SIZE', 10000),
     'CODE_POOL_BATCH_SIZE' => env('CODE_POOL_BATCH_SIZE', 500),
+    'SUCCESS' => 'success',
+    'DATA' => 'data',
 ];

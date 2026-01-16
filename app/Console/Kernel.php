@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('app:generate-short-code')
-        ->everyFiveMinutes()
+        ->everyTenMinutes()
         ->withoutOverlapping(10);
     }
 
