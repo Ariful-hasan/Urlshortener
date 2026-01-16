@@ -27,6 +27,8 @@ services:
         - USER_ID=${USER_ID:-1000}
         - GROUP_ID=${GROUP_ID:-1000}
     image: urlshortener_app
+    env_file:
+      - docker/common.env
     container_name: app
     restart: unless-stopped
     volumes:
@@ -39,18 +41,7 @@ services:
     networks:
       - app-network
     environment:
-      - APP_ENV
-      - DB_CONNECTION
-      - DB_HOST
-      - DB_PORT
-      - DB_DATABASE
-      - DB_USERNAME
-      - DB_PASSWORD
-      - PHP_FPM_NGINX_MAX_REQUESTS
-      - PHP_FPM_PORT
-      - REDIS_PASSWORD
-      - REDIS_PORT
-      - REDIS_HOST
+     - POD_NAME=${POD_NAME}
     healthcheck:
       test: ["CMD", "cgi-fcgi", "-bind", "-connect", "127.0.0.1:${PHP_FPM_PORT}"]
       interval: 10s
@@ -93,25 +84,25 @@ services:
       timeout: 5s
       retries: 5
 
-  worker:
-    image: app:latest # Reuses the image built by the app service
-    container_name: worker
-    build:
-        context: .
-        dockerfile: docker/Dockerfile
-    restart: unless-stopped
-    volumes:
-    - ./:/var/www/html
-    command: php /var/www/html/artisan queue:work --sleep=3 --tries=3 --timeout=90
-    depends_on:
-        app:
-            condition: service_healthy
-        db:
-            condition: service_healthy
-        redis:
-            condition: service_healthy
-    networks:
-    - app-network
+#   worker:
+#     image: app:latest # Reuses the image built by the app service
+#     container_name: worker
+#     build:
+#         context: .
+#         dockerfile: docker/Dockerfile
+#     restart: unless-stopped
+#     volumes:
+#     - ./:/var/www/html
+#     command: php /var/www/html/artisan queue:work --sleep=3 --tries=3 --timeout=90
+#     depends_on:
+#         app:
+#             condition: service_healthy
+#         db:
+#             condition: service_healthy
+#         redis:
+#             condition: service_healthy
+#     networks:
+#     - app-network
 
   scheduler:
     image: app:latest # Reuses the image built by the app service
@@ -119,13 +110,20 @@ services:
     build:
         context: .
         dockerfile: docker/Dockerfile
+    user: "${USER_ID}:${GROUP_ID}"
     restart: unless-stopped
     volumes:
     - ./:/var/www/html
+    env_file:
+      - docker/common.env
+    environment:
+      - SCHEDULER_PING_INTERVAL
+      - POD_NAME=url-shortener-2
     command: >
       sh -c "while true; do
-        php artisan schedule:run --no-interaction &
-        sleep ${SCHEDULER_PING_INTERVAL};
+        echo 'Running scheduler...'
+        php artisan schedule:run --no-interaction
+        sleep ${SCHEDULER_PING_INTERVAL:-60};
       done"
     depends_on:
         app:

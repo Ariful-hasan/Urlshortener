@@ -6,7 +6,6 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --optimize-autoloader --no-interaction --no-scripts
 
-
 # STAGE 2: Final Production Image
 FROM php:8.4-fpm-alpine
 WORKDIR /var/www/html
