@@ -47,4 +47,9 @@ class EloquentShortUrlRepository implements ShortUrlRepositoryContract
             throw $e;
         }
     }
+
+    public function findByShortCode(string $shortCode): ShortUrl
+    {
+        return $this->model->where('code', $shortCode)->firstOrFail();
+    }
 }
