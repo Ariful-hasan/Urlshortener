@@ -43,4 +43,14 @@ class CachedShortUrlRepository implements ShortUrlRepositoryContract
 
         return $shortUrl;
     }
+
+    public function findByShortCode(string $shortCode): ShortUrl
+    {
+        return Cache::remember(
+            self::CACHE_KEY_SHORT_URL . "{$shortCode}",
+            self::CACHE_TTL,
+             function () use ($shortCode) {
+            return $this->shortUrlRepository->findByShortCode($shortCode);
+        });
+    }
 }

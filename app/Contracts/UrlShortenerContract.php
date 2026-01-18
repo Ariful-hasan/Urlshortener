@@ -20,4 +20,6 @@ interface UrlShortenerContract {
      * @return string
      */
     public function makeHash (string $url): string;
+
+    public function getOriginalUrl(string $shortCode) : ShortUrl;
 }
