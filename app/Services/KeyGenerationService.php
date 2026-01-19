@@ -1,22 +1,22 @@
 <?php
 
+namespace App\Services;
+
 use App\Utilities\Base62Service;
 use App\Utilities\SnowflakeGenerator;
+use NoDiscard;
 
 class KeyGenerationService
 {
-    protected $length;
-
     public function __construct(
         protected SnowflakeGenerator $snowflakeGenerator,
-        protected Base62Service $base62Service,
-        protected CodePoolRepository $codePoolRepository
+        protected Base62Service $base62Service
     )
     {}
 
     #[NoDiscard]
     public function generate(): string
     {
-        return$this->base62Service->encode($this->snowflakeGenerator->nextId());
+        return $this->base62Service->encode($this->snowflakeGenerator->nextId());
     }
 }
