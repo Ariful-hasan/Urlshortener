@@ -16,8 +16,8 @@ services:
     environment:
       - DOCKER_API_VERSION=1.52
     ports:
-      - "8080:8080" # Traefik dashboard
-      - "80:80"     # HTTP traffic
+      - "$TRAEFIK_DASHBOARD_PORT:8080" # Traefik dashboard
+      - "${HTTP_PORT}:80"     # HTTP traffic
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
@@ -40,6 +40,7 @@ services:
       - PHP_FPM_NGINX_MAX_REQUESTS
       - PHP_FPM_PORT
       - APP_URL
+      - HTTP_PORT
     volumes:
       - ./:/var/www/html
       - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
