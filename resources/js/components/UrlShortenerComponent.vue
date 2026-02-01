@@ -32,7 +32,7 @@ export default {
 
     data() {
         return {
-            api: "http://localhost:8000/api/short-url",
+            api: "http://localhost:80/api/short-url",
             url_input: "",
             result_txt: ""
         }
@@ -42,7 +42,7 @@ export default {
         saveUrl() {
             if (this.url_input.length == "")
                 return false;
-            
+
             this.axios.post(this.api, { url: this.url_input })
             .then(res => {
                 if (res.data !== 'undefined' && res.data.hasOwnProperty('data')) {

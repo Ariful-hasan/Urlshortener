@@ -5400,7 +5400,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api: "http://localhost:8000/api/short-url",
+      api: "http://localhost:80/api/short-url",
       url_input: "",
       result_txt: ""
     };
